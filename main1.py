@@ -97,11 +97,6 @@ class Window(arcade.Window):
                 else:
                     self.score = self.score + HIT_SCORE
 
-        
-            if len(self.enemy_list) == 0:
-            # == means comparison, = means assignment 
-                arcade.draw_text("Congratulations!", 400, 300, open_color.white, 32)
-
                     
 
     def on_draw(self):
