@@ -19,6 +19,7 @@ BULLET_DAMAGE = 20
 ENEMY_HP = 100
 HIT_SCORE = 10
 KILL_SCORE = 100
+PLAYER_HP = 500
 
 class Bullet(arcade.Sprite):
     def __init__(self, position, velocity, damage):
@@ -47,6 +48,7 @@ class Player(arcade.Sprite):
         super().__init__("assets/narwhal.png", 0.5)
         #super is whatever arcade.sprite needs to initialize itself, do it
         (self.center_x, self.center_y) = STARTING_LOCATION
+        self.hp = PLAYER_HP
 
 class Enemy(arcade.Sprite):
     def __init__(self, position):
@@ -70,6 +72,7 @@ class Window(arcade.Window):
         arcade.set_background_color(open_color.blue_4)
         self.bullet_list = arcade.SpriteList()
         self.enemy_list = arcade.SpriteList()
+        self.bullet_enemy_list = arcade.SpriteList()
         self.player = Player()
         self.score = 0
 
@@ -97,12 +100,20 @@ class Window(arcade.Window):
                 else:
                     self.score = self.score + HIT_SCORE
 
-        
             if len(self.enemy_list) == 0:
             # == means comparison, = means assignment 
-                arcade.draw_text("Congratulations!", 400, 300, open_color.white, 32)
+                arcade.draw_text("Congratulations!", 400, 300, open_color.white, 32)  
 
-                    
+        self.bullet_enemy_list.update()
+        for player:
+            damage = arcade.check_for_collision_with_list(self.bullet_enemy_list, Player)
+            for d in damage:
+                d.kill()
+                if PLAYER_HP < 0:
+                    self.player.kill()
+                    self.score = self.score + 0
+                else:
+                    self.score = self.score + 0                  
 
     def on_draw(self):
         arcade.start_render()
@@ -110,6 +121,7 @@ class Window(arcade.Window):
         self.player.draw()
         self.bullet_list.draw()
         self.enemy_list.draw()
+        self.bullet_enemy_list.draw()
 
     def on_mouse_motion(self, x, y, dx, dy):
         '''
